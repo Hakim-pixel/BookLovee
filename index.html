@@ -202,10 +202,15 @@
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
 
+    /* Skala di HP agar tetap 1:1 tampilan desktop */
     @media (max-width: 900px) {
-      #book { width: 80vw; height: 60vh; left: 10vw; top: 20vh; }
-      #page1 .front .cover-plaque { width: 72%; }
+      html, body {
+        transform: scale(0.95);
+        transform-origin: top center;
+        overflow: hidden;
+      }
     }
+
   </style>
 </head>
 <body>
