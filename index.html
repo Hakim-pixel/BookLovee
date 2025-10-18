@@ -1,0 +1,300 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buku Cinta Interaktif</title>
+  <style>
+    #book {
+      width: 50vw;
+      height: 50vh;
+      position: absolute;
+      left: 25vw;
+      top: 25vh;
+      perspective: 75vw;
+    }
+
+    #book:before {
+      width: 1%;
+      height: 100%;
+      background: #222;
+      content: '';
+      position: absolute;
+      left: 49%;
+      top: 0;
+      box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.75);
+    }
+
+    .page {
+      width: 50%;
+      height: 100%;
+      background: radial-gradient(circle at 0% 100%, #777, #ddd 70%);
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transition: z-index 0.01s linear 1s, transform 2s linear;
+      transform-origin: 0% 50%;
+      z-index: 7;
+      cursor: pointer;
+      font-family: monospace;
+      text-align: center;
+      line-height: 50vh;
+    }
+
+    .front, .back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.1s linear 1s;
+    }
+
+    .front { opacity: 1; }
+    .back { transform: scaleX(-1); }
+
+    input { visibility: hidden; }
+
+    label {
+      width: 100%;
+      height: 100%;
+      z-index: 99;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    input:checked + .page { transform: rotateY(-180deg); }
+    input:checked + .page .front { opacity: 0; }
+    input:checked + .page .back { opacity: 1; }
+
+    #seven:checked + .page { z-index: 7; }
+    #six:checked + .page   { z-index: 6; }
+    #five:checked + .page  { z-index: 5; }
+    #four:checked + .page  { z-index: 4; }
+    #three:checked + .page { z-index: 3; }
+    #two:checked + .page   { z-index: 2; }
+    #one:checked + .page   { z-index: 1; }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: azure;
+      background-image: linear-gradient(-45deg, tomato, purple);
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+    }
+
+    .content img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
+    }
+
+    .content p {
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.3vh;
+      line-height: 1.4;
+    }
+
+    /* COVER */
+    #page1 .front {
+      background: #6b6b6b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #page1 .front .cover-plaque {
+      width: 60%;
+      aspect-ratio: 1 / 1;
+      background: #6b6b6b;
+      position: relative;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #page1 .front .cover-plaque::before {
+      content: '';
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      border-radius: 50%;
+      background: #0a0a0a;
+      right: -10%;
+      top: -10%;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.2);
+    }
+
+    #page1 .front .cover-text {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    #page1 .front .cover-text p {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300;
+      letter-spacing: 8px;
+      color: #e7a3df;
+      font-size: 2.8vh;
+      text-shadow: 0 0 6px rgba(231,163,223,0.7);
+    }
+
+    /* Halaman lain */
+    #page2 .front { background-color: #001f3f; display: flex; align-items: center; justify-content: center; }
+    #page3 .front { background-color: #111; display: flex; align-items: center; justify-content: center; }
+    #page4 .front { background-color: #fff0f5; display: flex; align-items: center; justify-content: center; }
+    #page5 .front { background-color: #000; display: flex; align-items: center; justify-content: center; }
+    #page6 .front { background-color: #fff0f5; display: flex; align-items: center; justify-content: center; }
+    #page7 .front { background-color: #2b2b2b; display: flex; align-items: center; justify-content: center; }
+
+    /* BACK */
+    #page1 .back { background: #222; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Poppins', sans-serif; font-size: 2.2vh; line-height: 3.5vh; }
+    #page1 .back:before { content: 'Katakan Cintaaa'; }
+
+    #page2 .back { background: white; color: tomato; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 2.2vh; line-height: 3.5vh; }
+    #page2 .back:before { content: 'hati ini memintaa'; }
+
+    #page3 .back { background: #111; color: #ff99cc; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 2.2vh; line-height: 3.5vh; }
+    #page3 .back:before { content: 'Kau lebih dari teman berbagi'; }
+
+    #page4 .back { background: #fff5f8; color: #d63384; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 2.2vh; line-height: 3.5vh; }
+    #page4 .back:before { content: 'jadi kekasih ku sajaa'; }
+
+    #page5 .back { background: #111; color: #d63384; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 2.2vh; line-height: 3.5vh; }
+    #page5 .back:before { content: 'Cinta Katakan Cintaa'; }
+
+    #page6 .back { background: #fff0f5; color: #d63384; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 2.2vh; line-height: 3.5vh; }
+    #page6 .back:before { content: 'Hati Ini Memintaa'; }
+
+    #page7 .back { background: #000000; color: #fff0f5; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 2.2vh; line-height: 3.5vh; }
+    #page7 .back:before { content: 'Kau Lebih Dari Teman Berbagi💕'; }
+
+    .heart {
+      position: fixed;
+      top: -10px;
+      color: pink;
+      font-size: 20px;
+      animation: fall 5s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    @media (max-width: 900px) {
+      #book { width: 80vw; height: 60vh; left: 10vw; top: 20vh; }
+      #page1 .front .cover-plaque { width: 72%; }
+    }
+  </style>
+</head>
+<body>
+  <audio id="bg-music" loop>
+    <source src="lagu.mp3" type="audio/mpeg">
+  </audio>
+
+  <div id="book">
+    <input type="checkbox" id="seven">
+    <div id="page7" class="page">
+      <div class="front">
+        <div class="content"><img src="./7.jpeg" alt="love"></div>
+      </div>
+      <div class="back"></div>
+      <label for="seven"></label>
+    </div>
+
+    <input type="checkbox" id="six">
+    <div id="page6" class="page">
+      <div class="front">
+        <div class="content"><img src="./6.jpeg" alt="love"></div>
+      </div>
+      <div class="back"></div>
+      <label for="six"></label>
+    </div>
+
+    <input type="checkbox" id="five">
+    <div id="page5" class="page">
+      <div class="front"><div class="content"><img src="./5.jpeg" alt="love"></div></div>
+      <div class="back"></div>
+      <label for="five"></label>
+    </div>
+
+    <input type="checkbox" id="four">
+    <div id="page4" class="page">
+      <div class="front"><div class="content"><img src="./4.jpeg" alt="love"></div></div>
+      <div class="back"></div>
+      <label for="four"></label>
+    </div>
+
+    <input type="checkbox" id="three">
+    <div id="page3" class="page">
+      <div class="front"><div class="content"><img src="./3.jpeg" alt="love"></div></div>
+      <div class="back"></div>
+      <label for="three"></label>
+    </div>
+
+    <input type="checkbox" id="two">
+    <div id="page2" class="page">
+      <div class="front"><div class="content"><img src="./2.jpeg" alt="love"></div></div>
+      <div class="back"></div>
+      <label for="two"></label>
+    </div>
+
+    <input type="checkbox" id="one">
+    <div id="page1" class="page">
+      <div class="front">
+        <div class="cover-plaque">
+          <div class="cover-text"><p>Lovee💕</p></div>
+        </div>
+      </div>
+      <div class="back"></div>
+      <label for="one"></label>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.page').forEach(page => {
+      page.addEventListener('click', function() {
+        this.style.pointerEvents = "none";
+        setTimeout(() => { this.style.pointerEvents = ""; }, 2000);
+      });
+    });
+
+    const music = document.getElementById("bg-music");
+    document.body.addEventListener("click", () => {
+      if (music.paused) music.play().catch(() => {});
+    }, { once: true });
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 10 + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+    setInterval(createHeart, 300);
+  </script>
+</body>
+</html>
